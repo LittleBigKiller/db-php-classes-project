@@ -1,4 +1,4 @@
-1. Korzystając z pakietu XAMPP utwórz nową bazę danych o nazwie auta.
+﻿1. Korzystając z pakietu XAMPP utwórz nową bazę danych o nazwie auta.
 
 2. Zaimportuj do utworzonej bazy danych pliki auta.csv i osoby.csv.
 
@@ -10,7 +10,9 @@
 
 6. Utwórz plik index.php, który zawierać będzie 2 hiperłącza, pokazujące wyniki zapytań z punktów 3 i 4, oraz hiperłącze wykonujące zapytanie z punktu 5.
 
-7. Wyniki (wiersze) zapytania z punktu 3 mają być wyświetlane naprzemiennie czcionką normalną i pogrubioną 8. Wyeksportuj bazę danych do pliku auta.sql.
+7. Wyniki (wiersze) zapytania z punktu 3 mają być wyświetlane naprzemiennie czcionką normalną i pogrubioną
+
+8. Wyeksportuj bazę danych do pliku auta.sql.
 
 9. Plik index.php oraz auta.sql zapisz w folderze nazwanym swoim imieniem i nazwiskiem. Folder skopiuj do lokalizacji S:\Sprawdzian.
 

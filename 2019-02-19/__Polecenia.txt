@@ -1,0 +1,4 @@
+﻿01 - pętle
+02 - bubble sort
+03 - szyfr
+04 - pesel

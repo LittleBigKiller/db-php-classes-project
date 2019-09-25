@@ -1,0 +1,8 @@
+01 -	Napisz skrypt, który sprawdzi ile kolejnych liczb naturalnych, zaczynając od liczby 1, daje największą sumę, ale mniejszą od 100.
+
+02 -	Napisz skrypt szyfrujący tekst kluczem KO-NI-EC-MA-TU-RY według następującej zasady: jeśli w tekście występuje litera K, jest ona zamieniana na literę O i odwrotnie, tzn. litera O jest zamieniana na literę K, jeśli w tekście występuje litera N, należy zastąpić ją literą I, natomiast literę I należy zastąpić literą N itd. Pozostałe litery, nie wymienione w kluczu, są wypisywane bez zmian. Przykład: słowo KOMPUTER po zaszyfrowaniu będzie wyglądało tak: OKAPTUCY.
+
+03 -	Napisz skrypt, który:
+	a.	wylosuje 20 liczb całkowitych z zakresu <-50;50>
+	b.	wypisze wszystkie wylosowane liczby w jednej kolumnie
+	c.	wyświetli największą i najmniejszą z wylosowanych liczb

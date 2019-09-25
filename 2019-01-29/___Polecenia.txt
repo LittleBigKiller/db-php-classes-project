@@ -1,0 +1,5 @@
+01 - html vs php
+02 - php może wyrzucać html
+03 - zmienne
+04 - równość a identyczność
+05 - operacje na liczbach i stringach

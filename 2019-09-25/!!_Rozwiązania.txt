@@ -39,3 +39,12 @@ SET
 )
 WHERE
     nr_rejestracyjny = 'KR21004'
+
+--- LUB ---
+
+UPDATE
+    osoby, auta
+SET
+    auta.id_wlasciciela = osoby.id_wlasciciela
+WHERE
+    nazwisko = 'Hubicki' AND imie = 'Karol' AND nr_rejestracyjny='KR21004'

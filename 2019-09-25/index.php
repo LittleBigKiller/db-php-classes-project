@@ -15,11 +15,21 @@ if (isset($_GET['akcja'])) {
 				or die('Błąd pobierania danych');
 				
 			if ($rs -> num_rows > 0) {
-				echo '<table border=1><tr><th>Imie</th><th>Nazwisko</th></tr>';
+				echo '<table border=1>';
+				$temp = 0;
 				while ($rec = $rs->fetch_array()) {
-					echo "<form><td>".$rec["imie"]."</td>
-					<td>".$rec["nazwisko"]."</td>
-					</tr></form>";
+					if ($temp % 2 == 1) {
+						echo "<td>".$rec["imie"]."</td>
+						<td>".$rec["nazwisko"]."</td>
+						</tr>";
+					}
+					else {
+						echo "<td><strong>".$rec["imie"]."</strong></td>
+						<td><strong>".$rec["nazwisko"]."</strong></td>
+						</tr></strong>";
+					}
+					$temp += 1;
+
 				}
 				echo '</table>';
 			}
@@ -38,7 +48,7 @@ if (isset($_GET['akcja'])) {
 				or die('Błąd pobierania danych');
 				
 			if ($rs -> num_rows > 0) {
-				echo '<table border=1><tr><th>Imie</th><th>Nazwisko</th></tr>';
+				echo '<table border=1>';
 				while ($rec = $rs->fetch_array()) {
 					echo "<form><td>".$rec["imie"]."</td>
 					<td>".$rec["nazwisko"]."</td>

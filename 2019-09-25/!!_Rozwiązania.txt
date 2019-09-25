@@ -1,0 +1,41 @@
+Zad 3:
+SELECT
+    imie,
+    nazwisko
+FROM
+    auta
+INNER JOIN osoby ON auta.id_wlasciciela = osoby.id_wlasciciela
+GROUP BY
+    osoby.id_wlasciciela
+HAVING
+    COUNT(osoby.id_wlasciciela) > 1
+	
+
+Zad 4:
+SELECT
+    imie,
+    nazwisko
+FROM
+    auta
+INNER JOIN osoby ON auta.id_wlasciciela = osoby.id_wlasciciela
+WHERE
+    marka = 'citroen'
+ORDER BY
+    auta.rok_produkcji
+LIMIT 1
+
+
+Zad 5:
+UPDATE
+    auta
+SET
+    id_wlasciciela =(
+    SELECT
+        id_wlasciciela
+    FROM
+        osoby
+    WHERE
+        nazwisko = 'Hubicki' AND imie = 'Karol'
+)
+WHERE
+    nr_rejestracyjny = 'KR21004'

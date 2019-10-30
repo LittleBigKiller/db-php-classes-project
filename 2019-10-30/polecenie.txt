@@ -1,0 +1,9 @@
+Zaprojektuj witrynę internetową stacji narciarskich, wykorzystując dane przechowywane w bazie MySQL. Witryna ma umożliwiać ocenę każdej stacji narciarskiej oraz wyłonienie trzech najwyżej ocenianych stacji. Aby zrealizować zadanie, wykonaj poniższe kroki:
+    1. Zaimportuj dane z pliku stacje_narciarskie.sql do bazy MySQL.
+    2. Zaprojektuj stronę główną witryny, która wyświetlać będzie zawartość tabeli stacje z bazy stacje_narciarskie. Uwaga: plik strony głównej musi nazywać się index.php.
+    3. Dla każdej stacji narciarskiej utwórz hiperłącze, którego kliknięcie wyświetlać będzie nazwę wybranej stacji narciarskiej oraz tabelkę z nazwami i długościami tras zjazdowych (tylko wybranej stacji).
+    4. Zaprojektuj tabelę umożliwiającą głosowanie na dowolną stację narciarską (ocena stacji w skali 1-6).
+    5. Formularz pozwalający na oddanie głosu umieść pod tabelką z nazwami i długościami tras zjazdowych wybranej stacji narciarskiej.
+    6. Bezpośrednio po zagłosowaniu na stronie powinien być wyświetlony aktualny ranking stacji narciarskich, prezentujący trzy stacje narciarskie, które uzyskały najwyższą średnią ocen.
+
+Do oceny oddajesz skrypt(y) PHP oraz wyeksportowaną do pliku *.sql bazę danych

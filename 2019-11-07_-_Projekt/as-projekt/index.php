@@ -34,12 +34,20 @@ if (isset($_POST['logout'])) {
         }
 
         echo '
-        <h1> Page Header </h1>
-        ';
+            <h1> Strona główna </h1>
+            <h2> Zalogowany jako: ' . $_COOKIE['username'] . ' </h2>
+            <form action="/as-projekt/" method="POST">
+                <input type="hidden" name="logout" value="true">
+                <button>Wyloguj</button>
+            </form>
+            ';
         if ($is_admin) {
             echo '
             <h2> Admin Content h2 </h2>
-            ';
+
+            <form action="/as-projekt/adminpanel.php" method="GET">
+                <button>Panel Administracyjny</button>
+            </form>';
         } else {
             echo '
             <h2> User Content h2 </h2>
@@ -47,24 +55,11 @@ if (isset($_POST['logout'])) {
         }
 
         echo '
-        <h3> Shared Content </h3>
+        <h2> Shared Content </h2>
         ';
 
-        if ($is_admin) {
-            echo '
-            <h4> Admin Content h4 </h4>
-            ';
-        } else {
-            echo '
-            <h4> User Content h4 </h4>
-            ';
-        }
-
         echo '
-            <form action="/as-projekt/" method="POST">
-                <input type="hidden" name="logout" value="true">
-                <button>Wyloguj</button>
-            </form>';
+            ';
     } else {
         echo '
             <h1>Nie jesteś zalogowany</h1>

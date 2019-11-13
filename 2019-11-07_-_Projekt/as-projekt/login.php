@@ -75,6 +75,9 @@ if (isset($_POST['login'])) {
                     <br>
                     <button>Zaloguj</button>
                 </form>
+                <form action="/as-projekt/" method="GET">
+                    <button>Wróć do strony głównej</button>
+                </form>
                 ';
         }
     }

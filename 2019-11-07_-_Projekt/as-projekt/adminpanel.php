@@ -25,7 +25,13 @@ if ($_POST['action'] == 'save') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Main Page</title>
+    <title>Panel Administracyjny</title>
+
+    <style>
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,6 +78,9 @@ if ($_POST['action'] == 'save') {
                     $rs = $conn->query('SELECT `uid`, `username`, `perm_level` FROM `users`')
                         or die('Błąd pobierania danych');
 
+                    $rs1 = $conn->query('SELECT `results`.`uid`, `users`.`username`, SUM(`results`.`ans_correct`), COUNT(`results`.`ans_correct`) * 10 FROM `users` INNER JOIN `results`
+                        ON `users`.`uid` = `results`.`uid` GROUP BY `results`.`uid`');
+
                     if ($rs->num_rows > 0) {
                         echo '
                         <table border=1>
@@ -79,6 +88,8 @@ if ($_POST['action'] == 'save') {
                             <th>Nazwa Użytkownika</th>
                             <th>Permisje</th>
                             <th>Akcje</th>
+                            <th>Poprawne odpowiedzi</th>
+                            <th>Niepoprawne odpowiedzi</th>
                         </tr>
                         ';
 
@@ -93,6 +104,18 @@ if ($_POST['action'] == 'save') {
                                     <option value="0"> użytkownik </option>
                                     <option value="1" selected> administrator </option>
                                     ';
+                                }
+
+                                $rs1 = $conn->query('SELECT SUM(`results`.`ans_correct`) AS "correct", COUNT(`results`.`ans_correct`) * 10 - SUM(`results`.`ans_correct`) AS "incorrect"
+                                    FROM `users` INNER JOIN `results` ON `users`.`uid` = `results`.`uid` GROUP BY `results`.`uid` HAVING `results`.`uid` = ' . $rec['uid']);
+
+                                $ans_correct = 0;
+                                $ans_incorrect = 0;
+                                if ($rs1->num_rows != 0) {
+                                    while ($rec1 = $rs1->fetch_array()) {
+                                        $ans_correct = $rec1['correct'];
+                                        $ans_incorrect = $rec1['incorrect'];
+                                    }
                                 }
 
                                 echo '
@@ -110,6 +133,12 @@ if ($_POST['action'] == 'save') {
                                             <button name="action" value="save">Zapisz</button>
                                             <button name="action" value="discard">Odrzuć</button>
                                         </td>
+                                        <td>' .
+                                    $ans_correct . '
+                                        </td>
+                                        <td>' .
+                                    $ans_incorrect . '
+                                        </td>
                                     </tr>
                                 </form>
                                 ';
@@ -117,6 +146,18 @@ if ($_POST['action'] == 'save') {
                                 $perm_text = 'użytkownik';
                                 if ($rec['perm_level'] == 1) {
                                     $perm_text = 'administrator';
+                                }
+
+                                $rs1 = $conn->query('SELECT SUM(`results`.`ans_correct`) AS "correct", COUNT(`results`.`ans_correct`) * 10 - SUM(`results`.`ans_correct`) AS "incorrect"
+                                    FROM `users` INNER JOIN `results` ON `users`.`uid` = `results`.`uid` GROUP BY `results`.`uid` HAVING `results`.`uid` = ' . $rec['uid']);
+
+                                $ans_correct = 0;
+                                $ans_incorrect = 0;
+                                if ($rs1->num_rows != 0) {
+                                    while ($rec1 = $rs1->fetch_array()) {
+                                        $ans_correct = $rec1['correct'];
+                                        $ans_incorrect = $rec1['incorrect'];
+                                    }
                                 }
 
                                 echo '
@@ -129,6 +170,12 @@ if ($_POST['action'] == 'save') {
                                         <td>
                                             <button name="action" value="edit">Edytuj</button>
                                             <button name="action" value="delete">Usuń</button>
+                                        </td>
+                                        <td>' .
+                                    $ans_correct . '
+                                        </td>
+                                        <td>' .
+                                    $ans_incorrect . '
                                         </td>
                                     </tr>
                                 </form>
@@ -153,23 +200,35 @@ if ($_POST['action'] == 'save') {
                         }
                     }
 
-                    $rs->close();
-
-                } else if ($_POST['submenu'] == 'questions') {
-                    echo '
-                        <h2> Zarządzaj pytaniami </h2>
-                        ';
-
-                } else if ($_POST['submenu'] == 'topusers') {
                     echo '
                         <h2> 10 najlepszych użytkowników </h2>
                         ';
 
+                    $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
+                        or die('Błąd pobierania danych');
+
+                    if ($rs->num_rows > 0) {
+                        echo '<table border=1>
+                            <tr><th>Użytkownik</th><th>Średnia Ocen</th></tr>';
+                        while ($rec = $rs->fetch_array()) {
+                            echo "<tr>
+                                <td>" . $rec["username"] . "</td>
+                                <td>" . ($rec["avg"] * 10) . "%</td>
+                                </tr>";
+                        }
+                    } else {
+                        echo 'no data';
+                    }
+
+                    $rs->close();
+                } else if ($_POST['submenu'] == 'questions') {
+                    echo '
+                        <h2> Zarządzaj pytaniami </h2>
+                        ';
                 } else if ($_POST['submenu'] == 'topquestions') {
                     echo '
                         <h2> 10 najtrudniejszych pytań </h2>
                         ';
-                        
                 } else {
                     echo '
                         <h2> Zarządzaj </h2>
@@ -182,11 +241,6 @@ if ($_POST['action'] == 'save') {
                         <form action="/as-projekt/adminpanel.php" method="POST">
                             <input type="hidden" name="submenu" value="questions">
                             <button>Zarządzaj pytaniami</button>
-                        </form>
-
-                        <form action="/as-projekt/adminpanel.php" method="POST">
-                            <input type="hidden" name="submenu" value="topusers">
-                            <button>10 najlepszych użytkowników</button>
                         </form>
 
                         <form action="/as-projekt/adminpanel.php" method="POST">

@@ -247,7 +247,8 @@ if ($_POST['submenu'] == 'users') {
                         <h2> Zarządzaj Pytaniami </h2>
                         ';
 
-                    $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect" FROM `questions` ')
+                    $rs = $conn->query('SELECT `questions`.`qid`, `questions`.`contents` AS "question", `questions`.`ans_correct` AS "correct", (`questions`.`ans_total` - `questions`.`ans_correct`) AS "incorrect",
+                        COUNT(`answers`.`aid`) AS "ans_count", SUM(`answers`.`is_correct`) AS "ans_correct" FROM `questions` LEFT JOIN `answers` ON `questions`.`qid` = `answers`.`qid` GROUP BY `questions`.`qid`')
                         or die('Błąd pobierania danych');
 
 
@@ -260,11 +261,16 @@ if ($_POST['submenu'] == 'users') {
                             </tr>';
                     if ($rs->num_rows > 0) {
                         while ($rec = $rs->fetch_array()) {
+                            $question = '<td>' . $rec['question'] . '</td>';
+                            if ($rec['ans_count'] != 4 || $rec['ans_correct'] != 1) {
+                                $question = '<td style="color: red" title="Za mało odpowiedzi lub poprawnych odpowiedzi">' . $rec['question'] . '</td>';
+                            }
+
                             echo '<tr>
                                     <form action="/as-projekt/adminpanel.php" method="POST">
                                         <input type="hidden" name="submenu" value="questions">
-                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">
-                                        <td>' . $rec['question'] . '</td>
+                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">'.
+                                        $question.'
                                         <td>' . $rec['correct'] . '</td>
                                         <td>' . $rec['incorrect'] . '</td>
                                         <td>
@@ -288,7 +294,7 @@ if ($_POST['submenu'] == 'users') {
 
                     echo '</table>';
 
-                    if ($_POST['action'] == 'edit_question' || $_POST['action'] == 'create_answer' || $_POST['action'] == 'add_answer' || $_POST['action'] == 'delete_answer' || $_POST['action'] == 'edit_answer' || $_POST['action'] == 'set_answer') {
+                    if ($_POST['action'] == 'edit_question' || $_POST['action'] == 'save_question' || $_POST['action'] == 'create_answer' || $_POST['action'] == 'add_answer' || $_POST['action'] == 'delete_answer' || $_POST['action'] == 'edit_answer' || $_POST['action'] == 'set_answer') {
                         echo '
                             <h2> Edytuj Pytanie 
                                 <form action="/as-projekt/adminpanel.php" method="POST">

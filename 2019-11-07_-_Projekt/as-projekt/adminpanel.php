@@ -1,20 +1,46 @@
 <?php
-if ($_POST['action'] == 'save') {
-    include('dbcredentials.php');
-    $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
+include('dbcredentials.php');
+$conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
 
-    if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
+if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
 
-    $rs = $conn->query('UPDATE `users` SET `username`="' . $_POST['username'] . '", `perm_level`="' . $_POST['perm_level'] . '" WHERE `uid`="' . $_POST['uid'] . '"')
-        or die('Błędne dane');
-} else if ($_POST['action'] == 'delete') {
-    include('dbcredentials.php');
-    $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
+$rs = $conn->query('SET NAMES utf8')
+    or die('Nie udało się ustawić CHARSET');
 
-    if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
+if ($_POST['submenu'] == 'users') {
+    if ($_POST['action'] == 'save') {
+        $rs = $conn->query('UPDATE `users` SET `username`="' . $_POST['username'] . '", `perm_level`="' . $_POST['perm_level'] . '" WHERE `uid`="' . $_POST['uid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'delete') {
+        $rs = $conn->query('DELETE FROM `users` WHERE `uid`="' . $_POST['uid'] . '"')
+            or die('Błędne dane');
+    }
+} else if ($_POST['submenu'] == 'questions') {
+    if ($_POST['action'] == 'save_question') {
+        $rs = $conn->query('UPDATE `questions` SET `contents`="' . $_POST['contents'] . '" WHERE `qid`="' . $_POST['qid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'delete_question') {
+        $rs = $conn->query('DELETE FROM `questions` WHERE `qid`="' . $_POST['qid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'add_question') {
+        $rs = $conn->query('INSERT INTO `questions`(`contents`) VALUES ("' . $_POST['contents'] . '")')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'edit_answer') {
+        $rs = $conn->query('UPDATE `answers` SET `contents`="' . $_POST['contents'] . '" WHERE `aid`="' . $_POST['aid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'set_answer') {
+        $rs = $conn->query('UPDATE `answers` SET `is_correct`=0 WHERE `qid`="' . $_POST['qid'] . '"')
+            or die('Błędne dane');
 
-    $rs = $conn->query('DELETE FROM `users` WHERE `uid`="' . $_POST['uid'] . '"')
-        or die('Błędne dane');
+        $rs = $conn->query('UPDATE `answers` SET `is_correct`=1 WHERE `aid`="' . $_POST['aid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'delete_answer') {
+        $rs = $conn->query('DELETE FROM `answers` WHERE `aid`="' . $_POST['aid'] . '"')
+            or die('Błędne dane');
+    } else if ($_POST['action'] == 'add_answer') {
+        $rs = $conn->query('INSERT INTO `answers`(`contents`, `qid`) VALUES ("' . $_POST['contents'] . '", "' . $_POST['qid'] . '")')
+            or die('Błędne dane');
+    }
 }
 ?>
 
@@ -37,11 +63,6 @@ if ($_POST['action'] == 'save') {
 <body>
     <?php
     if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
-        include('dbcredentials.php');
-        $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
-
-        if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
-
         $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $_COOKIE['username'] . '" AND `password` = "' . $_COOKIE['password'] . '"')
             or die('Błąd pobierania danych');
 
@@ -72,8 +93,8 @@ if ($_POST['action'] == 'save') {
 
                 if ($_POST['submenu'] == 'users') {
                     echo '
-                <h2> Zarządzaj użytkownikami </h2>
-                ';
+                        <h2> Zarządzaj użytkownikami </h2>
+                        ';
 
                     $rs = $conn->query('SELECT `uid`, `username`, `perm_level` FROM `users`')
                         or die('Błąd pobierania danych');
@@ -216,36 +237,259 @@ if ($_POST['action'] == 'save') {
                                 <td>" . ($rec["avg"] * 10) . "%</td>
                                 </tr>";
                         }
-                    } else {
-                        echo 'no data';
+
+                        echo '</table>';
                     }
 
                     $rs->close();
                 } else if ($_POST['submenu'] == 'questions') {
                     echo '
-                        <h2> Zarządzaj pytaniami </h2>
+                        <h2> Zarządzaj Pytaniami </h2>
                         ';
-                } else if ($_POST['submenu'] == 'topquestions') {
+
+                    $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect" FROM `questions` ')
+                        or die('Błąd pobierania danych');
+
+
+                    echo '<table border=1>
+                            <tr>
+                                <th>Pytanie</th>
+                                <th>Poprawne Odpowiedzi</th>
+                                <th>Niepoprawne Odpowiedzi</th>
+                                <th>Akcje</th>
+                            </tr>';
+                    if ($rs->num_rows > 0) {
+                        while ($rec = $rs->fetch_array()) {
+                            echo '<tr>
+                                    <form action="/as-projekt/adminpanel.php" method="POST">
+                                        <input type="hidden" name="submenu" value="questions">
+                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">
+                                        <td>' . $rec['question'] . '</td>
+                                        <td>' . $rec['correct'] . '</td>
+                                        <td>' . $rec['incorrect'] . '</td>
+                                        <td>
+                                            <button name="action" value="edit_question">Edytuj</button>
+                                            <button name="action" value="delete_question">Usuń</button>
+                                        </td>
+                                    </form>
+                                </tr>';
+                        }
+                    }
                     echo '
-                        <h2> 10 najtrudniejszych pytań </h2>
-                        ';
+                        <tr>
+                            <form action="/as-projekt/adminpanel.php" method="POST">
+                                <input type="hidden" name="submenu" value="questions">
+                                <th colspan="3">Utwórz nowe pytanie</th>
+                                <td>
+                                    <button name="action" value="create_question">Utwórz</button>
+                                </td>
+                            </form>
+                        </tr>';
+
+                    echo '</table>';
+
+                    if ($_POST['action'] == 'edit_question' || $_POST['action'] == 'create_answer' || $_POST['action'] == 'add_answer' || $_POST['action'] == 'delete_answer' || $_POST['action'] == 'edit_answer' || $_POST['action'] == 'set_answer') {
+                        echo '
+                            <h2> Edytuj Pytanie 
+                                <form action="/as-projekt/adminpanel.php" method="POST">
+                                    <input type="hidden" name="submenu" value="questions">
+                                    <button name="action" value="none">Anuluj</button>
+                                </form>
+                            </h2>
+                            ';
+
+                        $rs = $conn->query('SELECT `contents` AS "question" FROM `questions` WHERE `qid` = ' . $_POST['qid'])
+                            or die('Błąd pobierania danych');
+
+                        if ($rs->num_rows > 0) {
+                            echo '<table border=1>';
+                            while ($rec = $rs->fetch_array()) {
+                                echo '<tr>
+                                        <form action="/as-projekt/adminpanel.php" method="POST">
+                                            <input type="hidden" name="submenu" value="questions">
+                                            <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                            <th>Treść pytania: </th>
+                                            <td><input type="text" name="contents" value="' . $rec['question'] . '"></td>
+                                            <td><button name="action" value="save_question">Zmień Treść</button></td>
+                                        </form>
+                                    </tr>';
+
+                                $rs1 = $conn->query('SELECT `aid`, `contents` AS "answer", `is_correct`, `qid` FROM `answers` WHERE `qid` = ' . $_POST['qid']);
+                                if ($rs1->num_rows > 0) {
+                                    echo '
+                                        <tr>
+                                            <th colspan>
+                                                Treść Odpowiedzi
+                                            </th>
+                                            <th>
+                                                Poprawna
+                                            </th>
+                                            <th>
+                                                Akcje
+                                            </th>
+                                        </tr>';
+
+                                    while ($rec1 = $rs1->fetch_array()) {
+                                        $answer = $rec1['answer'];
+                                        $answer = str_replace('&', '&amp;', $answer);
+                                        $answer = str_replace('<', '&lt;', $answer);
+                                        $answer = str_replace('>', '&gt;', $answer);
+                                        $answer = str_replace('"', '&quot;', $answer);
+                                        $answer = str_replace('\'', '&#39;', $answer);
+
+                                        $is_correct = 'NIE';
+                                        if ($rec1['is_correct'] == 1) {
+                                            $is_correct = 'TAK';
+                                        }
+
+                                        echo '<tr>
+                                                <form action="/as-projekt/adminpanel.php" method="POST">
+                                                    <input type="hidden" name="submenu" value="questions">
+                                                    <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                                    <input type="hidden" name="aid" value="' . $rec1['aid'] . '">
+                                                    <td><input type="text" name="contents" value="' . $answer . '"</td>
+                                                    <td>' . $is_correct . '</td>
+                                                    <td>
+                                                        <button name="action" value="edit_answer">Zmień Treść</button>
+                                                        <button name="action" value="set_answer">Ustaw Poprawną</button>
+                                                        <button name="action" value="delete_answer">Usuń</button>
+                                                    </td>
+                                                </form>
+                                            </tr>';
+                                    }
+
+                                    if ($_POST['action'] == 'create_answer') {
+                                        echo '<tr>
+                                                <form action="/as-projekt/adminpanel.php" method="POST">
+                                                    <input type="hidden" name="submenu" value="questions">
+                                                    <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                                    <td><input type="text" name="contents" value=""</td>
+                                                    <td>NIE</td>
+                                                    <td>
+                                                        <button name="action" value="add_answer">Dodaj</button>
+                                                        <button name="action" value="edit_question">Anuluj</button>
+                                                    </td>
+                                                </form>
+                                            </tr>';
+                                    } else if ($rs1->num_rows < 4) {
+                                        echo '<tr>
+                                            <form action="/as-projekt/adminpanel.php" method="POST">
+                                                <input type="hidden" name="submenu" value="questions">
+                                                <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                                <td colspan="2"> Utwórz nową odpowiedź </td>
+                                                <td><button name="action" value="create_answer">Utwórz</button></td>
+                                            </form>
+                                        </tr>';
+                                    }
+                                } else {
+                                    if ($_POST['action'] == 'create_answer') {
+                                        echo '
+                                            <tr>
+                                                <th colspan>
+                                                    Treść Odpowiedzi
+                                                </th>
+                                                <th>
+                                                    Poprawna
+                                                </th>
+                                                <th>
+                                                    Akcje
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <form action="/as-projekt/adminpanel.php" method="POST">
+                                                    <input type="hidden" name="submenu" value="questions">
+                                                    <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                                    <td><input type="text" name="contents" value=""</td>
+                                                    <td>NIE</td>
+                                                    <td>
+                                                        <button name="action" value="add_answer">Dodaj</button>
+                                                        <button name="action" value="edit_question">Anuluj</button>
+                                                    </td>
+                                                </form>
+                                            </tr>';
+                                    } else {
+                                        echo '<tr>
+                                            <form action="/as-projekt/adminpanel.php" method="POST">
+                                                <input type="hidden" name="submenu" value="questions">
+                                                <input type="hidden" name="qid" value="' . $_POST['qid'] . '">
+                                                <td colspan="2"> To pytanie nie ma na chwilę obecną żadnych odpowiedzi </td>
+                                                <td><button name="action" value="create_answer">Utwórz</button></td>
+                                            </form>
+                                        </tr>';
+                                    }
+                                }
+                            }
+
+                            echo '</table>';
+                        }
+                    } else if ($_POST['action'] == 'create_question') {
+                        echo '
+                            <h2> Dodaj Pytanie
+                                <form action="/as-projekt/adminpanel.php" method="POST">
+                                    <input type="hidden" name="submenu" value="questions">
+                                    <button name="action" value="none">Anuluj</button>
+                                </form>
+                            </h2>
+                            <table border=1>
+                                <tr>
+                                    <form action="/as-projekt/adminpanel.php" method="POST">
+                                        <input type="hidden" name="submenu" value="questions">
+                                        <th>Treść pytania: </th>
+                                        <td><input type="text" name="contents" value="' . $rec['question'] . '"></td>
+                                        <td>
+                                            <button name="action" value="add_question">Dodaj</button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </table>';
+                    } else {
+                        echo '
+                            <h2> 10 najtrudniejszych pytań </h2>
+                            ';
+
+                        $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
+                            or die('Błąd pobierania danych');
+
+
+                        echo '<table border=1>
+                            <tr>
+                                <th>Pytanie</th>
+                                <th>Ilość odpowiedzi</th>
+                                <th>Procent Poprawnych</th>
+                            </tr>';
+
+                        if ($rs->num_rows > 0) {
+                            while ($rec = $rs->fetch_array()) {
+                                if ($rec['total'] != 0) {
+                                    echo '
+                                        <tr>
+                                            <td>' . $rec['question'] . '</td>
+                                            <td>' . $rec['total'] . '</td>
+                                            <td>' . ($rec['total'] != 0 ? $rec['correct'] / $rec['total'] * 100 : '0') . '%</td>
+                                        </tr>';
+                                }
+                            }
+                        } else {
+                            echo '
+                                <tr>
+                                    <td colspan="3">Brak Danych</td>
+                                </tr>';
+                        }
+
+                        echo '</table>';
+                    }
                 } else {
                     echo '
                         <h2> Zarządzaj </h2>
 
                         <form action="/as-projekt/adminpanel.php" method="POST">
                             <input type="hidden" name="submenu" value="users">
-                            <button>Zarządzaj użytkownikami</button>
+                            <button>Zarządzaj Użytkownikami</button>
                         </form>
 
                         <form action="/as-projekt/adminpanel.php" method="POST">
                             <input type="hidden" name="submenu" value="questions">
-                            <button>Zarządzaj pytaniami</button>
-                        </form>
-
-                        <form action="/as-projekt/adminpanel.php" method="POST">
-                            <input type="hidden" name="submenu" value="topquestions">
-                            <button>10 najtrudniejszych pytań</button>
+                            <button>Zarządzaj Pytaniami</button>
                         </form>
                         ';
                 }

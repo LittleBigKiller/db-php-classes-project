@@ -2,17 +2,3 @@
 
     ## Użytkownicy
         ? resetowanie haseł
-
-    ## Pytania
-        - tabela zawierająca pytania i odpowiedzi do nich
-        - edytowanie konkretnego pytania
-        - edytowanie konkretnej odpowiedzi
-        - oznaczenie konkretnej odpowiedzi jako poprawnej (wszystkie oznaczone jako niepoprawne, drugi request oznaczający konkretną jako poprawną)
-        - dodawanie nowego pytania
-
-    ## TopUsers
-        - wyświetlić to samo co w highscores.php
-
-    ## TopQuestions
-        - policzyć dla każdego pytania procent poprawnych (tylko jeśli ma więcej niż 0 odpowiedzi w sumie)
-        - wyświetlić top 10

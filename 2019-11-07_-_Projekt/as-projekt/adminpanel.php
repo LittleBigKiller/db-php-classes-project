@@ -64,7 +64,7 @@ if ($_POST['submenu'] == 'users') {
     <?php
     if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
         $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $_COOKIE['username'] . '" AND `password` = "' . $_COOKIE['password'] . '"')
-            or die('Błąd pobierania danych');
+            or die('Błąd pobierania danych 0');
 
         $rec = $rs->fetch_array();
 
@@ -97,7 +97,7 @@ if ($_POST['submenu'] == 'users') {
                         ';
 
                     $rs = $conn->query('SELECT `uid`, `username`, `perm_level` FROM `users`')
-                        or die('Błąd pobierania danych');
+                        or die('Błąd pobierania danych 1');
 
                     $rs1 = $conn->query('SELECT `results`.`uid`, `users`.`username`, SUM(`results`.`ans_correct`), COUNT(`results`.`ans_correct`) * 10 FROM `users` INNER JOIN `results`
                         ON `users`.`uid` = `results`.`uid` GROUP BY `results`.`uid`');
@@ -226,7 +226,7 @@ if ($_POST['submenu'] == 'users') {
                         ';
 
                     $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
-                        or die('Błąd pobierania danych');
+                        or die('Błąd pobierania danych 2');
 
                     if ($rs->num_rows > 0) {
                         echo '<table border=1>
@@ -249,7 +249,7 @@ if ($_POST['submenu'] == 'users') {
 
                     $rs = $conn->query('SELECT `questions`.`qid`, `questions`.`contents` AS "question", `questions`.`ans_correct` AS "correct", (`questions`.`ans_total` - `questions`.`ans_correct`) AS "incorrect",
                         COUNT(`answers`.`aid`) AS "ans_count", SUM(`answers`.`is_correct`) AS "ans_correct" FROM `questions` LEFT JOIN `answers` ON `questions`.`qid` = `answers`.`qid` GROUP BY `questions`.`qid`')
-                        or die('Błąd pobierania danych');
+                        or die('Błąd pobierania danych 3');
 
 
                     echo '<table border=1>
@@ -269,8 +269,8 @@ if ($_POST['submenu'] == 'users') {
                             echo '<tr>
                                     <form action="/as-projekt/adminpanel.php" method="POST">
                                         <input type="hidden" name="submenu" value="questions">
-                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">'.
-                                        $question.'
+                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">' .
+                                $question . '
                                         <td>' . $rec['correct'] . '</td>
                                         <td>' . $rec['incorrect'] . '</td>
                                         <td>
@@ -305,7 +305,7 @@ if ($_POST['submenu'] == 'users') {
                             ';
 
                         $rs = $conn->query('SELECT `contents` AS "question" FROM `questions` WHERE `qid` = ' . $_POST['qid'])
-                            or die('Błąd pobierania danych');
+                            or die('Błąd pobierania danych 4');
 
                         if ($rs->num_rows > 0) {
                             echo '<table border=1>';
@@ -454,7 +454,7 @@ if ($_POST['submenu'] == 'users') {
                             ';
 
                         $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
-                            or die('Błąd pobierania danych');
+                            or die('Błąd pobierania danych 5');
 
 
                         echo '<table border=1>
@@ -463,6 +463,8 @@ if ($_POST['submenu'] == 'users') {
                                 <th>Ilość odpowiedzi</th>
                                 <th>Procent Poprawnych</th>
                             </tr>';
+
+                        $num_displayed = 0;
 
                         if ($rs->num_rows > 0) {
                             while ($rec = $rs->fetch_array()) {
@@ -473,7 +475,15 @@ if ($_POST['submenu'] == 'users') {
                                             <td>' . $rec['total'] . '</td>
                                             <td>' . ($rec['total'] != 0 ? $rec['correct'] / $rec['total'] * 100 : '0') . '%</td>
                                         </tr>';
+
+                                    $num_displayed += 1;
                                 }
+                            }
+                            if ($num_displayed == 0) {
+                                echo '
+                                <tr>
+                                    <td colspan="3">Brak Danych</td>
+                                </tr>';
                             }
                         } else {
                             echo '

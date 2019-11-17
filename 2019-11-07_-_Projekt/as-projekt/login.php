@@ -67,10 +67,10 @@ if (isset($_POST['login'])) {
             echo '
                 <form method="POST">
                     <input type="hidden" name="login" value="true">
-                    <input type="text" minlength=6 maxlength=15 name="username" required>
+                    <input type="text" maxlength=15 name="username" required>
                     <label for="username">Username</label>
                     <br>
-                    <input type="password" minlength=6 maxlength=16 name="password" required>
+                    <input type="password" maxlength=16 name="password" required>
                     <label for="password">Password</label>
                     <br>
                     <button>Zaloguj</button>

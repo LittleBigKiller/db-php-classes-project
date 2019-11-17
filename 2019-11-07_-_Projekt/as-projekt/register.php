@@ -20,10 +20,8 @@
             or die('Błąd pobierania danych');
 
         if ($rs->num_rows == 0) {
-            $perms = 0;
-            if ($_POST['isAdmin'] == 'on') $perms = 1;
 
-            $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $_POST['username'] . '", "' . md5($_POST['password']) . '",' . $perms . ')')
+            $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $_POST['username'] . '", "' . md5($_POST['password']) . '", 0)')
                 or die('<h1>Błąd rejestracji</h1>
                     <form action="/as-projekt/" method="GET">
                         <button>Wróć do strony głównej</button>
@@ -56,9 +54,6 @@
                 <br>
                 <input type="password" minlength=6 maxlength=16 name="password" required>
                 <label for="password">Password</label>
-                <br>
-                <input type="checkbox" name="isAdmin">
-                <label for="isAdmin">isAdmin</label>
                 <br>
                 <button>Zarejestruj</button>
             </form>

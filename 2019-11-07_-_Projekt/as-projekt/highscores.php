@@ -15,6 +15,9 @@
 
     if ($conn->connect_errno) die('Brak połączenia');
 
+    $rs = $conn->query('SET NAMES utf8')
+        or die('Nie udało się ustawić CHARSET');
+
     echo '
         <h2> 10 najlepszych użytkowników
             <form action="/as-projekt/" method="GET">
@@ -46,7 +49,6 @@
     }
 
     echo '</table>';
-
     ?>
 </body>
 

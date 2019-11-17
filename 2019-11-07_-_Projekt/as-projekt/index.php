@@ -23,6 +23,9 @@ if (isset($_POST['logout'])) {
 
         if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
 
+        $rs = $conn->query('SET NAMES utf8')
+            or die('Nie udało się ustawić CHARSET');
+
         $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $_COOKIE['username'] . '" AND `password` = "' . $_COOKIE['password'] . '"')
             or die('Błąd pobierania danych');
 
@@ -35,30 +38,37 @@ if (isset($_POST['logout'])) {
 
         echo '
             <h1> Strona główna </h1>
-            <h2> Zalogowany jako: ' . $_COOKIE['username'] . ' </h2>
-            <form action="/as-projekt/" method="POST">
-                <input type="hidden" name="logout" value="true">
-                <button>Wyloguj</button>
-            </form>
+            <h2> Zalogowany jako: ' . $_COOKIE['username'] . '
+                <form action="/as-projekt/" method="POST">
+                    <input type="hidden" name="logout" value="true">
+                    <button>Wyloguj</button>
+                </form>
+            </h2>
             ';
         if ($is_admin) {
             echo '
-            <h2> Admin Content h2 </h2>
-
-            <form action="/as-projekt/adminpanel.php" method="GET">
-                <button>Panel Administracyjny</button>
-            </form>';
-        } else {
-            echo '
-            <h2> User Content h2 </h2>
-            ';
+                <form action="/as-projekt/adminpanel.php" method="GET">
+                    <button>Panel Administracyjny</button>
+                </form>';
         }
 
         echo '
-        <h2> Shared Content </h2>
-        ';
+            <h2> Test 10 Pytań
+                <form action="/as-projekt/exam.php" method="GET">
+                    <button>Rozpocznij</button>
+                </form>
+            </h2>
+            ';
 
         echo '
+            <h2> Statystyki
+                <form action="/as-projekt/highscores.php" method="GET">
+                    <button>10 najlepszych użytkowników</button>
+                </form>
+                <form action="/as-projekt/topquestions.php" method="GET">
+                    <button>10 najtrudniejszych pytań</button>
+                </form>
+            </h2>
             ';
     } else {
         echo '

@@ -26,7 +26,8 @@
             </h2>
             ';
 
-    $rs = $conn->query('SELECT `qid`, `contents` AS "question" FROM `questions` ORDER BY RAND() LIMIT 10')
+    $rs = $conn->query('SELECT `questions`.`qid`, `questions`.`contents` AS "question" FROM `questions` LEFT JOIN `answers` ON `questions`.`qid` = `answers`.`qid`
+        GROUP BY `questions`.`qid`HAVING COUNT(`answers`.`aid`) = 4 AND SUM(`answers`.`is_correct`) = 1 ORDER BY RAND() LIMIT 10 ')
         or die('Błąd pobierania danych 0');
 
     echo '

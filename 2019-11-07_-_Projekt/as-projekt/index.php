@@ -38,7 +38,7 @@ if (isset($_POST['logout'])) {
 
         echo '
             <h1> Strona główna </h1>
-            <h2> Zalogowany jako: ' . $_COOKIE['username'] . '
+            <h2> Zalogowany jako: ' . str_replace('\\"', '"', $_COOKIE['username']) . '
                 <form action="/as-projekt/" method="POST">
                     <input type="hidden" name="logout" value="true">
                     <button>Wyloguj</button>

@@ -4,13 +4,16 @@ if (isset($_POST['login'])) {
     $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
 
     if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
+    
+    $username = $_POST['username'];
+    $username = str_replace('"', '\"', $username);
 
-    $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $_POST['username'] . '" AND `password` = "' . md5($_POST['password']) . '"')
+    $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . md5($_POST['password']) . '"')
         or die('Błąd pobierania danych');
 
     if ($rs->num_rows > 0) {
         $passlogin = true;
-        setcookie('username', $_POST['username'], time() + (86400 * 30), "/as-projekt/");
+        setcookie('username', $username, time() + (86400 * 30), "/as-projekt/");
         setcookie('password', md5($_POST['password']), time() + (86400 * 30), "/as-projekt/");
     }
 }
@@ -36,7 +39,7 @@ if (isset($_POST['login'])) {
 
         if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
 
-        $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $_POST['username'] . '" AND `password` = "' . md5($_POST['password']) . '"')
+        $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . md5($_POST['password']) . '"')
             or die('Błąd pobierania danych');
 
         if ($rs->num_rows > 0) {
@@ -52,7 +55,7 @@ if (isset($_POST['login'])) {
             </form>';
     } else if (isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
         echo '
-            <h1>Zalogowano: ' . $_COOKIE['username'] . '</h1>
+            <h1>Zalogowano: ' . str_replace('\\"', '"', $_COOKIE['username']) . '</h1>
             <form action="/as-projekt/" method="GET">
                 <button>Wróć do strony głównej</button>
             </form>';

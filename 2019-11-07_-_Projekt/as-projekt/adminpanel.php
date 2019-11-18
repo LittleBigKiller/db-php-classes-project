@@ -18,7 +18,6 @@ if ($_POST['submenu'] == 'users') {
 } else if ($_POST['submenu'] == 'questions') {
     $contents = $_POST['contents'];
     $contents = str_replace('"', '\"', $contents);
-    $contents = str_replace('--', '\-\-', $contents);
 
     if ($_POST['action'] == 'save_question') {
         $rs = $conn->query('UPDATE `questions` SET `contents`="' . $contents . '" WHERE `qid`="' . $_POST['qid'] . '"')

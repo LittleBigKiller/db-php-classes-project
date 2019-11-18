@@ -16,12 +16,15 @@
     if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
 
     if (isset($_POST['register'])) {
-        $rs = $conn->query('SELECT `users`.`username` FROM `users` WHERE `username` = "' . $_POST['username'] . '"')
+        $username = $_POST['username'];
+        $username = str_replace('"', '\"', $username);
+        
+        $rs = $conn->query('SELECT `users`.`username` FROM `users` WHERE `username` = "' . $username . '"')
             or die('Błąd pobierania danych');
 
         if ($rs->num_rows == 0) {
 
-            $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $_POST['username'] . '", "' . md5($_POST['password']) . '", 0)')
+            $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $username . '", "' . md5($_POST['password']) . '", 0)')
                 or die('<h1>Błąd rejestracji</h1>
                     <form action="/as-projekt/" method="GET">
                         <button>Wróć do strony głównej</button>

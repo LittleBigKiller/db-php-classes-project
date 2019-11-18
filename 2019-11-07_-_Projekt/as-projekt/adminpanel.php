@@ -16,17 +16,21 @@ if ($_POST['submenu'] == 'users') {
             or die('Błędne dane');
     }
 } else if ($_POST['submenu'] == 'questions') {
+    $contents = $_POST['contents'];
+    $contents = str_replace('"', '\"', $contents);
+    $contents = str_replace('--', '\-\-', $contents);
+
     if ($_POST['action'] == 'save_question') {
-        $rs = $conn->query('UPDATE `questions` SET `contents`="' . $_POST['contents'] . '" WHERE `qid`="' . $_POST['qid'] . '"')
+        $rs = $conn->query('UPDATE `questions` SET `contents`="' . $contents . '" WHERE `qid`="' . $_POST['qid'] . '"')
             or die('Błędne dane');
     } else if ($_POST['action'] == 'delete_question') {
         $rs = $conn->query('DELETE FROM `questions` WHERE `qid`="' . $_POST['qid'] . '"')
             or die('Błędne dane');
     } else if ($_POST['action'] == 'add_question') {
-        $rs = $conn->query('INSERT INTO `questions`(`contents`) VALUES ("' . $_POST['contents'] . '")')
+        $rs = $conn->query('INSERT INTO `questions`(`contents`) VALUES ("' . $contents . '")')
             or die('Błędne dane');
     } else if ($_POST['action'] == 'edit_answer') {
-        $rs = $conn->query('UPDATE `answers` SET `contents`="' . $_POST['contents'] . '" WHERE `aid`="' . $_POST['aid'] . '"')
+        $rs = $conn->query('UPDATE `answers` SET `contents`="' . $contents . '" WHERE `aid`="' . $_POST['aid'] . '"')
             or die('Błędne dane');
     } else if ($_POST['action'] == 'set_answer') {
         $rs = $conn->query('UPDATE `answers` SET `is_correct`=0 WHERE `qid`="' . $_POST['qid'] . '"')
@@ -38,7 +42,7 @@ if ($_POST['submenu'] == 'users') {
         $rs = $conn->query('DELETE FROM `answers` WHERE `aid`="' . $_POST['aid'] . '"')
             or die('Błędne dane');
     } else if ($_POST['action'] == 'add_answer') {
-        $rs = $conn->query('INSERT INTO `answers`(`contents`, `qid`) VALUES ("' . $_POST['contents'] . '", "' . $_POST['qid'] . '")')
+        $rs = $conn->query('INSERT INTO `answers`(`contents`, `qid`) VALUES ("' . $contents . '", "' . $_POST['qid'] . '")')
             or die('Błędne dane');
     }
 }
@@ -453,7 +457,7 @@ if ($_POST['submenu'] == 'users') {
                             <h2> 10 najtrudniejszych pytań </h2>
                             ';
 
-                        $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
+                        $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
                             or die('Błąd pobierania danych 5');
 
 
@@ -464,8 +468,6 @@ if ($_POST['submenu'] == 'users') {
                                 <th>Procent Poprawnych</th>
                             </tr>';
 
-                        $num_displayed = 0;
-
                         if ($rs->num_rows > 0) {
                             while ($rec = $rs->fetch_array()) {
                                 if ($rec['total'] != 0) {
@@ -475,15 +477,7 @@ if ($_POST['submenu'] == 'users') {
                                             <td>' . $rec['total'] . '</td>
                                             <td>' . ($rec['total'] != 0 ? $rec['correct'] / $rec['total'] * 100 : '0') . '%</td>
                                         </tr>';
-
-                                    $num_displayed += 1;
                                 }
-                            }
-                            if ($num_displayed == 0) {
-                                echo '
-                                <tr>
-                                    <td colspan="3">Brak Danych</td>
-                                </tr>';
                             }
                         } else {
                             echo '

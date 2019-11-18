@@ -43,11 +43,18 @@
 
         if ($rs->num_rows > 0) {
             while ($rec = $rs->fetch_array()) {
+                $question = $rec['question'];
+                $question = str_replace('&', '&amp;', $question);
+                $question = str_replace('<', '&lt;', $question);
+                $question = str_replace('>', '&gt;', $question);
+                $question = str_replace('"', '&quot;', $question);
+                $question = str_replace('\'', '&#39;', $question);
+
                 echo '<table border=1>
                         <input type="hidden" name="qid_q' . $q_num . '" value="' . $rec['qid'] . '">
                         <tr>
                             <th>' . $q_num . '</th>
-                            <th colspan="2">' . $rec['question'] . '</th>
+                            <th colspan="2">' . $question . '</th>
                         </tr>';
 
                 $rs1 = $conn->query('SELECT `aid`, `contents`  AS "answer", `is_correct` FROM `answers` WHERE `qid` = "' . $rec['qid'] . '" ')
@@ -56,13 +63,20 @@
                 if ($rs1->num_rows > 0) {
                     $a_num = ord('A');
                     while ($rec1 = $rs1->fetch_array()) {
+                        $answer = $rec1['answer'];
+                        $answer = str_replace('&', '&amp;', $answer);
+                        $answer = str_replace('<', '&lt;', $answer);
+                        $answer = str_replace('>', '&gt;', $answer);
+                        $answer = str_replace('"', '&quot;', $answer);
+                        $answer = str_replace('\'', '&#39;', $answer);
+
                         if ($rec1['is_correct']) {
                             if ($rec1['aid'] == $_POST['aid_q' . $q_num]) {
                                 echo '
                                     <tr style="color: green">
                                         <td>' . chr($a_num) . '</td>
                                         <td><input type="radio" checked></td>
-                                        <td>' . $rec1['answer'] . '</td>
+                                        <td>' . $answer . '</td>
                                     </tr>';
 
                                 if (!$is_old) {
@@ -76,7 +90,7 @@
                                     <tr style="color: green">
                                         <td>' . chr($a_num) . '</td>
                                         <td><input type="radio"></td>
-                                        <td>' . $rec1['answer'] . '</td>
+                                        <td>' . $answer . '</td>
                                     </tr>';
                             }
                         } else if ($rec1['aid'] == $_POST['aid_q' . $q_num]) {
@@ -84,7 +98,7 @@
                                 <tr style="color: red">
                                     <td>' . chr($a_num) . '</td>
                                     <td><input type="radio" checked></td>
-                                    <td>' . $rec1['answer'] . '</td>
+                                    <td>' . $answer . '</td>
                                 </tr>';
 
                             if (!$is_old) {
@@ -96,7 +110,7 @@
                                 <tr>
                                     <td>' . chr($a_num) . '</td>
                                     <td><input type="radio"></td>
-                                    <td>' . $rec1['answer'] . '</td>
+                                    <td>' . $answer . '</td>
                                 </tr>';
                         }
 

@@ -26,7 +26,7 @@
         </h2>
         ';
 
-    $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
+    $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
         or die('Błąd pobierania danych 5');
 
 
@@ -37,8 +37,6 @@
             <th>Procent Poprawnych</th>
         </tr>';
 
-    $num_displayed = 0;
-
     if ($rs->num_rows > 0) {
         while ($rec = $rs->fetch_array()) {
             if ($rec['total'] != 0) {
@@ -48,15 +46,7 @@
                         <td>' . $rec['total'] . '</td>
                         <td>' . ($rec['total'] != 0 ? $rec['correct'] / $rec['total'] * 100 : '0') . '%</td>
                     </tr>';
-
-                $num_displayed += 1;
             }
-        }
-        if ($num_displayed == 0) {
-            echo '
-            <tr>
-                <td colspan="3">Brak Danych</td>
-            </tr>';
         }
     } else {
         echo '

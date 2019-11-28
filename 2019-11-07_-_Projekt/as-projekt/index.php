@@ -89,9 +89,6 @@ if (isset($_POST['logout'])) {
                     <div class="toptable">
                         <h2> 10 najlepszych użytkowników </h2>
                         <?php
-                            $conn->query('SET NAMES utf8')
-                                or die('Nie udało się ustawić CHARSET');
-
                             $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
                                 or die('Błąd pobierania danych');
                             ?>
@@ -122,9 +119,6 @@ if (isset($_POST['logout'])) {
                     <div class="toptable">
                         <h2> 10 najtrudniejszych pytań </h2>
                         <?php
-                            $conn->query('SET NAMES utf8')
-                                or die('Nie udało się ustawić CHARSET');
-
                             $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
                                 or die('Błąd pobierania danych');
                             ?>

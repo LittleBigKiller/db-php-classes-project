@@ -18,7 +18,7 @@
     if (isset($_POST['register'])) {
         $username = $_POST['username'];
         $username = str_replace('"', '\"', $username);
-        
+
         $rs = $conn->query('SELECT `users`.`username` FROM `users` WHERE `username` = "' . $username . '"')
             or die('Błąd pobierania danych');
 

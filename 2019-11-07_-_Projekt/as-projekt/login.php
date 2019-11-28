@@ -4,7 +4,7 @@ if (isset($_POST['login'])) {
     $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);
 
     if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
-    
+
     $username = $_POST['username'];
     $username = str_replace('"', '\"', $username);
 

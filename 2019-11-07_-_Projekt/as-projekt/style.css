@@ -72,6 +72,7 @@ button {
 button:hover {
   border-color: #cf7f2f;
   color: #cf7f2f;
+  background-color: #cfcfcf;
 }
 
 button:active {
@@ -126,6 +127,7 @@ button:active {
 #logreg_content_box h1 {
   color: #cf2f2f;
   font-size: 6em;
+  text-align: center;
 }
 
 .button_menu {

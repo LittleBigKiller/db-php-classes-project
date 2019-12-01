@@ -2,7 +2,6 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 body {
@@ -176,6 +175,82 @@ button:active {
   border-color: #cf2f2f;
 }
 
+#scroll_content_box {
+  width: 100%;
+  height: 100%;
+  overflow: hidden auto;
+  background-color: #2f7fcf;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#scroll_content_box form {
+  padding-bottom: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#scroll_content_box table {
+  width: 80%;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+#scroll_content_box input[type="radio"] {
+  padding-right: 5px;
+}
+
+#scroll_content_box td,
+#scroll_content_box th {
+  text-align: left;
+  background-color: #4f4f4f;
+}
+
+#scroll_content_box th {
+  background-color: #2f2f2f;
+  border: 5px solid #2f2f2f;
+  padding: 10px;
+}
+
+.exam_radans {
+  position: relative;
+}
+
+.exam_radans input {
+  position: absolute;
+  top: 18px;
+  left: 12px;
+}
+
+.exam_radans label {
+  box-sizing: content-box;
+  display: block;
+  width: calc(100% - 45px);
+  height: 100%;
+  padding: 10px;
+  padding-left: 25px;
+  border: 5px solid #4f4f4f;
+}
+
+.exam_radans label:hover {
+  border-color: #cf7f2f;
+}
+
+.exam_radans input:checked + label {
+  background-color: #cf7f2f;
+  border-color: #cf7f2f;
+}
+
+.exam_button {
+  margin-bottom: 20px;
+}
+
 #main_box {
   width: 100%;
   height: calc(100% - 180px);
@@ -183,7 +258,7 @@ button:active {
   flex-direction: row;
 }
 
-#nav_box {
+#admin_nav_box {
   width: 240px;
   height: 100%;
   overflow: hidden auto;
@@ -191,7 +266,7 @@ button:active {
   padding: 20px;
 }
 
-#content_box {
+#admin_content_box {
   width: calc(100% - 240px);
   height: 100%;
   overflow: hidden auto;

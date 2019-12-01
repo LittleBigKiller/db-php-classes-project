@@ -251,6 +251,40 @@ button:active {
   margin-bottom: 20px;
 }
 
+.result_radans {
+  position: relative;
+}
+
+.result_radans input {
+  position: absolute;
+  top: 18px;
+  left: 12px;
+}
+
+.result_radans label {
+  box-sizing: content-box;
+  display: block;
+  width: calc(100% - 45px);
+  height: 100%;
+  padding: 10px;
+  padding-left: 25px;
+  border: 5px solid #4f4f4f;
+}
+
+.result_good input + label {
+  background-color: #2fcF2f;
+  border-color: #2fcF2f;
+}
+
+.result_bad input:checked + label {
+  background-color: #cf2f2f;
+  border-color: #cf2f2f;
+}
+
+.result_button {
+  margin-bottom: 20px;
+}
+
 #main_box {
   width: 100%;
   height: calc(100% - 180px);

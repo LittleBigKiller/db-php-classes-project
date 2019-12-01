@@ -13,8 +13,8 @@ if (isset($_POST['login'])) {
 
     if ($rs->num_rows > 0) {
         $passlogin = true;
-        setcookie('username', $username, time() + (86400 * 30), "/as-projekt/");
-        setcookie('password', md5($_POST['password']), time() + (86400 * 30), "/as-projekt/");
+        setcookie('username', $username, time() + (86400), "/as-projekt/");
+        setcookie('password', md5($_POST['password']), time() + (86400), "/as-projekt/");
     }
 }
 ?>
@@ -29,6 +29,14 @@ if (isset($_POST['login'])) {
     <title>Login</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <?php
+    if ($passlogin || isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
+        ?>
+        <meta http-equiv="refresh" content="0; url=/as-projekt/" />
+    <?php
+    }
+    ?>
 </head>
 
 <body>
@@ -40,8 +48,6 @@ if (isset($_POST['login'])) {
     <div id="main_box">
         <div id="logreg_content_box">
             <?php
-            $passlogin = false;
-
             if (isset($_POST['login'])) {
                 include('dbcredentials.php');
                 $conn = new mysqli($db_server, $db_user, $db_passwd, $db_dbname);

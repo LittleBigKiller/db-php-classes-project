@@ -102,9 +102,6 @@ if ($_POST['submenu'] == 'users') {
                     $rs = $conn->query('SELECT `uid`, `username`, `perm_level` FROM `users`')
                         or die('Błąd pobierania danych 1');
 
-                    $rs1 = $conn->query('SELECT `results`.`uid`, `users`.`username`, SUM(`results`.`ans_correct`), COUNT(`results`.`ans_correct`) * 10 FROM `users` INNER JOIN `results`
-                        ON `users`.`uid` = `results`.`uid` GROUP BY `results`.`uid`');
-
                     if ($rs->num_rows > 0) {
                         echo '
                         <table border=1>
@@ -223,80 +220,7 @@ if ($_POST['submenu'] == 'users') {
                                 ';
                         }
                     }
-
-                    echo '
-                        <h2> 10 najlepszych użytkowników </h2>
-                        ';
-
-                    $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
-                        or die('Błąd pobierania danych 2');
-
-                    if ($rs->num_rows > 0) {
-                        echo '<table border=1>
-                            <tr><th>Użytkownik</th><th>Średnia Ocen</th></tr>';
-                        while ($rec = $rs->fetch_array()) {
-                            echo "<tr>
-                                <td>" . $rec["username"] . "</td>
-                                <td>" . ($rec["avg"] * 10) . "%</td>
-                                </tr>";
-                        }
-
-                        echo '</table>';
-                    }
-
-                    $rs->close();
                 } else if ($_POST['submenu'] == 'questions') {
-                    echo '
-                        <h2> Zarządzaj Pytaniami </h2>
-                        ';
-
-                    $rs = $conn->query('SELECT `questions`.`qid`, `questions`.`contents` AS "question", `questions`.`ans_correct` AS "correct", (`questions`.`ans_total` - `questions`.`ans_correct`) AS "incorrect",
-                        COUNT(`answers`.`aid`) AS "ans_count", SUM(`answers`.`is_correct`) AS "ans_correct" FROM `questions` LEFT JOIN `answers` ON `questions`.`qid` = `answers`.`qid` GROUP BY `questions`.`qid`')
-                        or die('Błąd pobierania danych 3');
-
-
-                    echo '<table border=1>
-                            <tr>
-                                <th>Pytanie</th>
-                                <th>Poprawne Odpowiedzi</th>
-                                <th>Niepoprawne Odpowiedzi</th>
-                                <th>Akcje</th>
-                            </tr>';
-                    if ($rs->num_rows > 0) {
-                        while ($rec = $rs->fetch_array()) {
-                            $question = '<td>' . $rec['question'] . '</td>';
-                            if ($rec['ans_count'] != 4 || $rec['ans_correct'] != 1) {
-                                $question = '<td style="color: red" title="Za mało odpowiedzi lub poprawnych odpowiedzi">' . $rec['question'] . '</td>';
-                            }
-
-                            echo '<tr>
-                                    <form action="/as-projekt/adminpanel.php" method="POST">
-                                        <input type="hidden" name="submenu" value="questions">
-                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">' .
-                                $question . '
-                                        <td>' . $rec['correct'] . '</td>
-                                        <td>' . $rec['incorrect'] . '</td>
-                                        <td>
-                                            <button name="action" value="edit_question">Edytuj</button>
-                                            <button name="action" value="delete_question">Usuń</button>
-                                        </td>
-                                    </form>
-                                </tr>';
-                        }
-                    }
-                    echo '
-                        <tr>
-                            <form action="/as-projekt/adminpanel.php" method="POST">
-                                <input type="hidden" name="submenu" value="questions">
-                                <th colspan="3">Utwórz nowe pytanie</th>
-                                <td>
-                                    <button name="action" value="create_question">Utwórz</button>
-                                </td>
-                            </form>
-                        </tr>';
-
-                    echo '</table>';
-
                     if ($_POST['action'] == 'edit_question' || $_POST['action'] == 'save_question' || $_POST['action'] == 'create_answer' || $_POST['action'] == 'add_answer' || $_POST['action'] == 'delete_answer' || $_POST['action'] == 'edit_answer' || $_POST['action'] == 'set_answer') {
                         echo '
                             <h2> Edytuj Pytanie 
@@ -452,41 +376,59 @@ if ($_POST['submenu'] == 'users') {
                                 </tr>
                             </table>';
                     } else {
-                        echo '
-                            <h2> 10 najtrudniejszych pytań </h2>
-                            ';
-
-                        $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
-                            or die('Błąd pobierania danych 5');
-
-
-                        echo '<table border=1>
-                            <tr>
-                                <th>Pytanie</th>
-                                <th>Ilość odpowiedzi</th>
-                                <th>Procent Poprawnych</th>
-                            </tr>';
-
-                        if ($rs->num_rows > 0) {
-                            while ($rec = $rs->fetch_array()) {
-                                if ($rec['total'] != 0) {
-                                    echo '
-                                        <tr>
-                                            <td>' . $rec['question'] . '</td>
-                                            <td>' . $rec['total'] . '</td>
-                                            <td>' . ($rec['total'] != 0 ? $rec['correct'] / $rec['total'] * 100 : '0') . '%</td>
-                                        </tr>';
-                                }
-                            }
-                        } else {
-                            echo '
-                                <tr>
-                                    <td colspan="3">Brak Danych</td>
-                                </tr>';
-                        }
-
                         echo '</table>';
                     }
+
+                    echo '
+                        <h2> Zarządzaj Pytaniami </h2>
+                        ';
+
+                    $rs = $conn->query('SELECT `questions`.`qid`, `questions`.`contents` AS "question", `questions`.`ans_correct` AS "correct", (`questions`.`ans_total` - `questions`.`ans_correct`) AS "incorrect",
+                        COUNT(`answers`.`aid`) AS "ans_count", SUM(`answers`.`is_correct`) AS "ans_correct" FROM `questions` LEFT JOIN `answers` ON `questions`.`qid` = `answers`.`qid` GROUP BY `questions`.`qid`')
+                        or die('Błąd pobierania danych 3');
+
+
+                    echo '<table border=1>
+                            <tr>
+                                <th>Pytanie</th>
+                                <th>Poprawne Odpowiedzi</th>
+                                <th>Niepoprawne Odpowiedzi</th>
+                                <th>Akcje</th>
+                            </tr>';
+                    if ($rs->num_rows > 0) {
+                        while ($rec = $rs->fetch_array()) {
+                            $question = '<td>' . $rec['question'] . '</td>';
+                            if ($rec['ans_count'] != 4 || $rec['ans_correct'] != 1) {
+                                $question = '<td style="color: red" title="Za mało odpowiedzi lub poprawnych odpowiedzi">' . $rec['question'] . '</td>';
+                            }
+
+                            echo '<tr>
+                                    <form action="/as-projekt/adminpanel.php" method="POST">
+                                        <input type="hidden" name="submenu" value="questions">
+                                        <input type="hidden" name="qid" value="' . $rec['qid'] . '">' .
+                                $question . '
+                                        <td>' . $rec['correct'] . '</td>
+                                        <td>' . $rec['incorrect'] . '</td>
+                                        <td>
+                                            <button name="action" value="edit_question">Edytuj</button>
+                                            <button name="action" value="delete_question">Usuń</button>
+                                        </td>
+                                    </form>
+                                </tr>';
+                        }
+                    }
+                    echo '
+                        <tr>
+                            <form action="/as-projekt/adminpanel.php" method="POST">
+                                <input type="hidden" name="submenu" value="questions">
+                                <th colspan="3">Utwórz nowe pytanie</th>
+                                <td>
+                                    <button name="action" value="create_question">Utwórz</button>
+                                </td>
+                            </form>
+                        </tr>';
+
+                    echo '</table>';
                 } else {
                     echo '
                         <h2> Zarządzaj </h2>

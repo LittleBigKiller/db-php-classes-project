@@ -19,7 +19,7 @@ body {
   position: relative;
   width: 100%;
   height: 120px;
-  background-color: #2fcf2f;
+  background-color: #a80d05;
   text-align: center;
   color: white;
   display: flex;
@@ -35,7 +35,7 @@ body {
 #footer {
   width: 100%;
   height: 60px;
-  background-color: #2fcf2f;
+  background-color: #a80d05;
   text-align: center;
   color: white;
   display: flex;
@@ -54,7 +54,7 @@ body {
   top: 0;
   width: 240px;
   height: 120px;
-  background-color: #cf2f2f;
+  background-color: #540703;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -62,7 +62,7 @@ body {
 }
 
 button {
-  background-color: #7f7f7f;
+  background-color: #2f2f2f;
   border: 2px solid #ffffff;
   color: #ffffff;
   padding: 10px;
@@ -71,7 +71,7 @@ button {
 button:hover {
   border-color: #cf7f2f;
   color: #cf7f2f;
-  background-color: #cfcfcf;
+  background-color: #3f3f3f;
 }
 
 button:active {
@@ -82,15 +82,14 @@ button:active {
 #index_main_box {
   width: 100%;
   height: calc(100% - 180px);
-  display: flex;
-  flex-direction: column;
+  background-color: #2f3237;
+  overflow: hidden auto;
 }
 
 #index_nav_box {
   width: 100%;
   height: 120px;
-  overflow: hidden auto;
-  background-color: #7f2fcf;
+  background-color: #015501;
   padding: 20px;
   display: flex;
   flex-direction: row;
@@ -105,9 +104,7 @@ button:active {
 
 #index_content_box {
   width: 100%;
-  height: calc(100% - 120px);
-  overflow: hidden auto;
-  background-color: #2f7fcf;
+  background-color: #2f3237;
   padding: 20px;
 }
 
@@ -115,7 +112,7 @@ button:active {
   width: 100%;
   height: 100%;
   overflow: hidden auto;
-  background-color: #2f7fcf;
+  background-color: #2f3237;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -179,7 +176,7 @@ button:active {
   width: 100%;
   height: 100%;
   overflow: hidden auto;
-  background-color: #2f7fcf;
+  background-color: #2f3237;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -209,13 +206,14 @@ button:active {
 #scroll_content_box td,
 #scroll_content_box th {
   text-align: left;
-  background-color: #4f4f4f;
+  background-color: #26282e;
 }
 
 #scroll_content_box th {
-  background-color: #2f2f2f;
-  border: 5px solid #2f2f2f;
-  padding: 10px;
+  background-color: #26282e;
+  border: 5px solid #26282e;
+  padding: 15px;
+  font-size: 1.2em;
 }
 
 .exam_radans {
@@ -226,6 +224,7 @@ button:active {
   position: absolute;
   top: 18px;
   left: 12px;
+  transform: scale(1.2);
 }
 
 .exam_radans label {
@@ -235,16 +234,16 @@ button:active {
   height: 100%;
   padding: 10px;
   padding-left: 25px;
-  border: 5px solid #4f4f4f;
+  border: 5px solid #26282e;
 }
 
 .exam_radans label:hover {
-  border-color: #cf7f2f;
+  border-color: #4B91D1;
 }
 
 .exam_radans input:checked + label {
-  background-color: #cf7f2f;
-  border-color: #cf7f2f;
+  background-color: #4B91D1;
+  border-color: #4B91D1;
 }
 
 .exam_button {
@@ -259,6 +258,8 @@ button:active {
   position: absolute;
   top: 18px;
   left: 12px;
+  transform: scale(1.2);
+  outline: none;
 }
 
 .result_radans label {
@@ -268,21 +269,48 @@ button:active {
   height: 100%;
   padding: 10px;
   padding-left: 25px;
-  border: 5px solid #4f4f4f;
+  border: 5px solid #26282e;
+}
+
+.result_neutral input + label {
+  background-color: #451717;
+  border-color: #451717;
+  color: #ffd9d9;
+  opacity: 0.2;
+}
+
+.result_neutral input {
+  opacity: 0.2;
 }
 
 .result_good input + label {
-  background-color: #2fcF2f;
-  border-color: #2fcF2f;
+  background-color: #015501;
+  border-color: #015501;
 }
 
 .result_bad input:checked + label {
-  background-color: #cf2f2f;
-  border-color: #cf2f2f;
+  background-color: #820000;
+  border-color: #820000;
 }
 
 .result_button {
   margin-bottom: 20px;
+}
+
+.result_score_box {
+  width: 90%;
+  height: 100px;
+  font-size: 3em;
+  text-align: center;
+  border-bottom: 2px solid #a80d05;
+  border-top: 2px solid #a80d05;
+  color: #ffffff;
+  margin-bottom: 20px;
+  padding: 20px 0;
+}
+
+.result_score_yourscore {
+  color: #f8180d;
 }
 
 #main_box {
@@ -304,7 +332,7 @@ button:active {
   width: calc(100% - 240px);
   height: 100%;
   overflow: hidden auto;
-  background-color: #2f7fcf;
+  background-color: #2f3237;
   padding: 20px;
 }
 
@@ -315,7 +343,7 @@ button:active {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: #2f7fcf;
+  background-color: #2f3237;
 }
 
 #loggedin_warning_buttons {
@@ -347,21 +375,30 @@ button:active {
 .toptable {
   border-collapse: collapse;
   text-align: center;
+  color: #ffffff;
 }
 
 .toptable h2 {
   padding: 10px 0;
-  background: #7f7f7f;
-  border: 2px solid #000000;
+  background: #26282e;
+  border: 2px solid #2f3237;
   border-bottom: none;
   border-radius: 15px 15px 0 0;
 }
 
+.toptable h3 {
+  padding: 10px 0;
+  background: #26282e;
+  border: 2px solid #2f3237;
+  border-top: none;
+  border-radius: 0 0 15px 15px ;
+}
+
 .toptable td,
 .toptable th {
-  border: 2px solid #000000;
+  border: 2px solid #2f3237;
   padding: 10px;
   width: 160px;
   text-align: center;
-  background-color: #7f7f7f;
+  background-color: #26282e;
 }

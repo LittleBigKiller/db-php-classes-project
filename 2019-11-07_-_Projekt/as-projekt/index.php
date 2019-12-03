@@ -69,92 +69,180 @@ if (isset($_POST['logout'])) {
     </div>
     <?php
     if ($is_loggedin) {
-        ?>
-        <div id="index_main_box">
-            <div id="index_nav_box">
-                <form action="/as-projekt/exam.php" method="GET">
-                    <button id="index_start">Rozpocznij Test 10 Pytań</button>
-                </form>
-                <?php
-                    if ($is_admin) {
-                        ?>
-                    <form action="/as-projekt/adminpanel.php" method="GET">
-                        <button id="loggedin_adminbutton">Otwórz Panel Administracyjny</button>
+        if (!isset($_POST['show-personal'])) {
+            ?>
+            <div id="index_main_box">
+                <div id="index_nav_box">
+                    <form action="/as-projekt/exam.php" method="GET">
+                        <button id="index_start">Rozpocznij Test 10 Pytań</button>
                     </form>
-                <?php
-                    }
-                    ?>
-            </div>
-            <div id="index_content_box">
-                <div id="toptable_box">
-                    <div class="toptable">
-                        <h2> 10 najlepszych użytkowników </h2>
-                        <?php
-                            $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
-                                or die('Błąd pobierania danych');
-                            ?>
-                        <table class="toptable">
-                            <tr>
-                                <th>Użytkownik</th>
-                                <th>Średnia Ocen</th>
-                            </tr>
-
-                            <?php
-                                if ($rs->num_rows > 0) {
-                                    while ($rec = $rs->fetch_array()) {
-                                        echo '
-                                            <tr>
-                                                ' . (strlen($rec['username']) < 15 ? '<td>' . $rec['username'] : '<td title="' . $rec['username'] . '">' . substr($rec['username'], 0, 12) . '...') . '</td>
-                                                <td>' . round($rec['avg'] * 10, 2) . '%</td>
-                                            </tr>';
-                                    }
-                                } else {
-                                    echo '
-                                        <tr>
-                                            <td colspan="2">Brak Danych</td>
-                                        </tr>';
-                                }
+                    <form action="/as-projekt/" method="POST">
+                        <input type="hidden" name="show-personal" value="true">
+                        <button id="index_start">Moje Statystyki</button>
+                    </form>
+                    <?php
+                            if ($is_admin) {
                                 ?>
-                        </table>
-                    </div>
-                    <div class="toptable">
-                        <h2> 10 najtrudniejszych pytań </h2>
-                        <?php
-                            $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
-                                or die('Błąd pobierania danych');
+                        <form action="/as-projekt/adminpanel.php" method="GET">
+                            <button id="loggedin_adminbutton">Otwórz Panel Administracyjny</button>
+                        </form>
+                    <?php
+                            }
                             ?>
-                        <table class="toptable">
-                            <tr>
-                                <th>Pytanie</th>
-                                <th>Ilość odpowiedzi</th>
-                                <th>Procent Poprawnych</th>
-                            </tr>
-
+                </div>
+                <div id="index_content_box">
+                    <div id="toptable_box">
+                        <div class="toptable">
+                            <h2> 10 najlepszych użytkowników </h2>
                             <?php
-                                if ($rs->num_rows > 0) {
-                                    while ($rec = $rs->fetch_array()) {
-                                        echo '
-                                            <tr>
-                                                ' . (strlen($rec['question']) < 120 ? '<td style="width: 320px">' .  $rec['question'] : '<td style="width: 320px" title="' . $rec['question'] . '">' . substr($rec['question'], 0, 117) . '...') . '</td>
-                                                <td>' . $rec['total'] . '</td>
-                                                <td>' . ($rec['total'] != 0 ? round($rec['correct'] / $rec['total'] * 100, 2) : '0') . '%</td>
-                                            </tr>';
-                                    }
-                                } else {
-                                    echo '
+                                    $rs = $conn->query('SELECT `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg" FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` ORDER BY AVG(`results`.`ans_correct`) DESC LIMIT 10')
+                                        or die('Błąd pobierania danych');
+                                    ?>
+                            <table class="toptable">
+                                <tr>
+                                    <th>Użytkownik</th>
+                                    <th>Średnia Ocen</th>
+                                </tr>
+
+                                <?php
+                                        if ($rs->num_rows > 0) {
+                                            while ($rec = $rs->fetch_array()) {
+                                                ?>
                                         <tr>
-                                            <td colspan="2">Brak Danych</td>
-                                        </tr>';
-                                }
-                                ?>
-                        </table>
+                                            <?php echo ((strlen($rec['username']) < 15 ? '<td>' . $rec['username'] : '<td title="' . $rec['username'] . '">' . substr($rec['username'], 0, 12) . '...')) ?></td>
+                                            <td><?php echo (round($rec['avg'] * 10, 2)) ?>%</td>
+                                        </tr>
+                                    <?php
+                                                }
+                                            } else {
+                                                ?>
+                                    <tr>
+                                        <td colspan="2">Brak Danych</td>
+                                    </tr>
+                                <?php
+                                        }
+                                        ?>
+                            </table>
+                            <h3> </h3>
+                        </div>
+                        <div class="toptable">
+                            <h2> 10 najtrudniejszych pytań </h2>
+                            <?php
+                                    $rs = $conn->query('SELECT `qid`, `contents` AS "question", `ans_correct` AS "correct", (`ans_total` - `ans_correct`) AS "incorrect", `ans_total` AS "total" FROM `questions` HAVING `ans_total` > 0 ORDER BY `ans_correct` / `ans_total` ASC LIMIT 10')
+                                        or die('Błąd pobierania danych');
+                                    ?>
+                            <table class="toptable">
+                                <tr>
+                                    <th>Pytanie</th>
+                                    <th>Ilość odpowiedzi</th>
+                                    <th>Procent Poprawnych</th>
+                                </tr>
+
+                                <?php
+                                        if ($rs->num_rows > 0) {
+                                            while ($rec = $rs->fetch_array()) {
+                                                ?>
+                                        <tr>
+                                            <?php echo ((strlen($rec['question']) < 120 ? '<td style="width: 320px">' .  $rec['question'] : '<td style="width: 320px" title="' . $rec['question'] . '">' . substr($rec['question'], 0, 117) . '...')) ?></td>
+                                            <td><?php echo ($rec['total']) ?></td>
+                                            <td><?php echo (($rec['total'] != 0 ? round($rec['correct'] / $rec['total'] * 100, 2) : '0')) ?>%</td>
+                                        </tr>
+                                    <?php
+                                                }
+                                            } else {
+                                                ?>
+                                    <tr>
+                                        <td colspan="2">Brak Danych</td>
+                                    </tr>
+                                <?php
+                                        }
+                                        ?>
+                            </table>
+                            <h3> </h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <?php
-    } else {
-        ?>
+        <?php
+            } else {
+                ?>
+            <div id="index_main_box">
+                <div id="index_nav_box">
+                    <form action="/as-projekt/exam.php" method="GET">
+                        <button id="index_start">Rozpocznij Test 10 Pytań</button>
+                    </form>
+                    <form action="/as-projekt/" method="GET">
+                        <input type="hidden">
+                        <button id="index_start">Użytkownicy i Pytania</button>
+                    </form>
+                    <?php
+                            if ($is_admin) {
+                                ?>
+                        <form action="/as-projekt/adminpanel.php" method="GET">
+                            <button id="loggedin_adminbutton">Otwórz Panel Administracyjny</button>
+                        </form>
+                    <?php
+                            }
+                            ?>
+                </div>
+                <div id="index_content_box">
+                    <div id="toptable_box">
+                        <div class="toptable">
+                            <h2> Moje Statystyki </h2>
+                            <?php
+                                    $rs0 = $conn->query('SELECT `uid` FROM `users` WHERE `username` = "' . $_COOKIE['username'] . '"')
+                                        or die('Błąd pobierania danych 0');
+
+                                    $rec0 = $rs0->fetch_array();
+
+                                    $rs = $conn->query('SELECT `users`.`uid`, `users`.`username` AS "username", AVG(`results`.`ans_correct`) AS "avg", SUM(`results`.`ans_correct`) AS "correct",
+                                    COUNT(`results`.`ans_correct`) * 10 - SUM(`results`.`ans_correct`) AS "incorrect", COUNT(`results`.`ans_correct`) * 10 AS "total"
+                                    FROM `results` INNER JOIN `users` ON `results`.`uid` = `users`.`uid` GROUP BY `results`.`uid` HAVING `users`.`uid` = "' . $rec0['uid'] . '"')
+                                        or die('Błąd pobierania danych 1');
+
+
+                                    ?>
+                            <table class="toptable">
+                                <tr>
+                                    <th>Nazwa Użytkownika</th>
+                                    <th>Poprawne Odpowiedzi</th>
+                                    <th>Niepoprawne Odpowiedzi</th>
+                                    <th>Średnia Ocen</th>
+                                    <th>Wszystkie Odpowiedzi</th>
+                                </tr>
+
+                                <?php
+
+                                        if ($rs->num_rows > 0) {
+                                            while ($rec = $rs->fetch_array()) {
+                                                ?>
+                                        <tr>
+                                            <?php echo ((strlen($rec['username']) < 15 ? '<td>' . $rec['username'] : '<td title="' . $rec['username'] . '">' . substr($rec['username'], 0, 12) . '...')) ?></td>
+                                            <td><?php echo ($rec['correct']) ?></td>
+                                            <td><?php echo ($rec['incorrect']) ?></td>
+                                            <td><?php echo (round($rec['avg'] * 10, 2)) ?>%</td>
+                                            <td><?php echo ($rec['total']) ?></td>
+                                        </tr>
+                                    <?php
+                                                }
+                                            } else {
+                                                ?>
+                                    <tr>
+                                        <td colspan="5">Brak Danych - Rozwiąż Test 10 Pytań</td>
+                                    </tr>
+                                <?php
+                                        }
+                                        ?>
+                            </table>
+                            <h3> </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php
+            }
+        } else {
+            ?>
 
         <div id="loggedin_warning_box">
             <div id="loggedin_warning_text">

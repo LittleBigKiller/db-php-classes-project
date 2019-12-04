@@ -8,6 +8,14 @@
   <title>Register</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    function passToBase64() {
+      document.getElementById('send_passwd').value = btoa(document.getElementById('input_passwd').value)
+
+      document.getElementById('form_register').submit()
+    }
+  </script>
 </head>
 
 <body>
@@ -32,7 +40,7 @@
           or die('Błąd pobierania danych');
 
         if ($rs->num_rows == 0) {
-          $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $username . '", "' . md5($_POST['password']) . '", 0)')
+          $rs = $conn->query('INSERT INTO `users`(`username`, `password`, `perm_level`) VALUES ("' . $username . '", "' . $_POST['password'] . '", 0)')
             or die('<h1>Błąd rejestracji</h1>
                     <form action="/as-projekt/" method="GET">
                         <button class="button_menu">Wróć do strony głównej</button>
@@ -71,17 +79,18 @@
           ?>
         <div id="input_cont">
           <h1>Zarejestruj</h1>
-          <form class="big_form" method="POST">
+          <form id="form_register" class="big_form" method="POST">
             <input type="hidden" name="register" value="true">
             <div class="input_elem">
               <label for="username">Username</label>
               <input type="text" minlength=6 maxlength=15 name="username" required>
             </div>
             <div class="input_elem">
-              <label for="password">Password</label>
-              <input type="password" minlength=6 maxlength=16 name="password" required>
+              <input id="send_passwd" type="hidden" name="password">
+              <label for="password">Hasło</label>
+              <input id="input_passwd" type="password" maxlength=16 required>
             </div>
-            <button class="button_menu">Zarejestruj</button>
+            <button type="button" class="button_menu" onclick="passToBase64()">Zarejestruj</button>
           </form>
           <form action="/as-projekt/" method="GET">
             <button class="button_menu">Wróć do strony głównej</button>

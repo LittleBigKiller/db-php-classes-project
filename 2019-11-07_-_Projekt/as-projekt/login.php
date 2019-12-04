@@ -8,13 +8,13 @@ if (isset($_POST['login'])) {
   $username = $_POST['username'];
   $username = str_replace('"', '\"', $username);
 
-  $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . md5($_POST['password']) . '"')
+  $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . $_POST['password'] . '"')
     or die('Błąd pobierania danych');
 
   if ($rs->num_rows > 0) {
     $passlogin = true;
     setcookie('username', $username, time() + (86400), "/as-projekt/");
-    setcookie('password', md5($_POST['password']), time() + (86400), "/as-projekt/");
+    setcookie('password', $_POST['password'], time() + (86400), "/as-projekt/");
   }
 }
 ?>
@@ -29,6 +29,14 @@ if (isset($_POST['login'])) {
   <title>Login</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    function passToBase64() {
+      document.getElementById('send_passwd').value = btoa(document.getElementById('input_passwd').value)
+
+      document.getElementById('form_login').submit()
+    }
+  </script>
 
   <?php
   if ($passlogin || isset($_COOKIE['username']) and isset($_COOKIE['password'])) {
@@ -54,7 +62,7 @@ if (isset($_POST['login'])) {
 
         if ($conn->connect_errno) die('Nie można się połączyć z bazą danych');
 
-        $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . md5($_POST['password']) . '"')
+        $rs = $conn->query('SELECT `perm_level` FROM `users` WHERE `username` = "' . $username . '" AND `password` = "' . $_POST['password'] . '"')
           or die('Błąd pobierania danych');
 
         if ($rs->num_rows > 0) {
@@ -88,17 +96,18 @@ if (isset($_POST['login'])) {
             ?>
           <div id="input_cont">
             <h1>Zaloguj</h1>
-            <form class="big_form" method="POST">
+            <form id="form_login" class="big_form" method="POST">
               <input type="hidden" name="login" value="true">
               <div class="input_elem">
                 <label for="username">Username</label>
                 <input type="text" maxlength=15 name="username" required>
               </div>
               <div class="input_elem">
+                <input id="send_passwd" type="hidden" name="password">
                 <label for="password">Hasło</label>
-                <input type="password" maxlength=16 name="password" required>
+                <input id="input_passwd" type="password" maxlength=16 required>
               </div>
-              <button class="button_menu">Zaloguj</button>
+              <button type="button" class="button_menu" onclick="passToBase64()">Zaloguj</button>
             </form>
             <form action="/as-projekt/" method="GET">
               <button class="button_menu">Wróć do strony głównej</button>

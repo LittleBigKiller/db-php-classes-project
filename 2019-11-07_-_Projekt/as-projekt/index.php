@@ -1,7 +1,7 @@
 <?php
 if (isset($_POST['logout'])) {
   setcookie('username', $_POST['username'], time() - (86400 * 30), "/as-projekt/");
-  setcookie('password', md5($_POST['password']), time() - (86400 * 30), "/as-projekt/");
+  setcookie('password', $_POST['password'], time() - (86400 * 30), "/as-projekt/");
 }
 ?>
 

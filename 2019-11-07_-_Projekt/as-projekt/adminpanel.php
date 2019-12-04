@@ -80,7 +80,7 @@ if ($_POST['submenu'] == 'users') {
 
   <div id="header">
     <div id="header_helper"></div>
-    <h1> Strona główna </h1>
+    <h1> Panel Administracyjny </h1>
     <div id="header_helper"></div>
     <div id="loggedin_box">
       <?php

@@ -35,7 +35,7 @@ if (isset($_POST['logout'])) {
 
   <div id="header">
     <div id="header_helper"></div>
-    <h1> Strona główna </h1>
+    <h1> Strona Główna </h1>
     <div id="header_helper"></div>
     <div id="loggedin_box">
       <?php

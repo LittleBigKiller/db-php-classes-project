@@ -61,8 +61,9 @@
         </form>
       <?php
       } else {
-        echo '
-                    <b>Nie jesteś zalogowany!</b>';
+        ?>
+        <b>Nie jesteś zalogowany!</b>
+      <?php
       }
       ?>
     </div>

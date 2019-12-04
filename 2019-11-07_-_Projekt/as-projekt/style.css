@@ -109,7 +109,7 @@ button:disabled:active {
 #index_nav_box {
   width: 100%;
   height: 120px;
-  background-color: #015501;
+  background-color: #22262a;
   padding: 20px;
   display: flex;
   flex-direction: row;

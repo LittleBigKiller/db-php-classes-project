@@ -68,15 +68,35 @@ button {
   padding: 10px;
 }
 
+button:disabled {
+  background-color: #1f1f1f;
+  border: 2px solid #cfcfcf;
+  color: #cfcfcf;
+  padding: 10px;
+}
+
 button:hover {
   border-color: #cf7f2f;
   color: #cf7f2f;
   background-color: #3f3f3f;
 }
 
+button:disabled:hover {
+  border-color: #cfcfcf;
+  color: #cfcfcf;
+  background-color: #1f1f1f;
+}
+
 button:active {
   border-color: #7fcf2f;
   color: #7fcf2f;
+  background-color: #3f3f3f;
+}
+
+button:disabled:active {
+  border-color: #cfcfcf;
+  color: #cfcfcf;
+  background-color: #1f1f1f;
 }
 
 #index_main_box {
@@ -121,7 +141,7 @@ button:active {
 }
 
 #logreg_content_box h1 {
-  color: #cf2f2f;
+  color: #a80d05;
   font-size: 6em;
   text-align: center;
 }
@@ -169,7 +189,7 @@ button:active {
 }
 
 .input_elem input:invalid {
-  border-color: #cf2f2f;
+  border-color: #a80d05;
 }
 
 #scroll_content_box {
@@ -238,12 +258,12 @@ button:active {
 }
 
 .exam_radans label:hover {
-  border-color: #4B91D1;
+  border-color: #4b91d1;
 }
 
 .exam_radans input:checked + label {
-  background-color: #4B91D1;
-  border-color: #4B91D1;
+  background-color: #4b91d1;
+  border-color: #4b91d1;
 }
 
 .exam_button {
@@ -317,15 +337,28 @@ button:active {
   width: 100%;
   height: calc(100% - 180px);
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
 }
 
 #admin_nav_box {
   width: 240px;
   height: 100%;
   overflow: hidden auto;
-  background-color: #7f2fcf;
+  background-color: #22262a;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#admin_nav_box * {
+  margin-bottom: 10px;
+}
+
+#admin_nav_box h2 {
+  border-top: 2px solid #ffffff;
+  color: #ffffff;
+  padding-top: 10px;
 }
 
 #admin_content_box {
@@ -360,7 +393,7 @@ button:active {
 }
 
 #loggedin_warning_text {
-  color: #cf2f2f;
+  color: #a80d05;
   font-weight: 900;
   font-size: 6em;
 }
@@ -391,7 +424,7 @@ button:active {
   background: #26282e;
   border: 2px solid #2f3237;
   border-top: none;
-  border-radius: 0 0 15px 15px ;
+  border-radius: 0 0 15px 15px;
 }
 
 .toptable td,
@@ -401,4 +434,42 @@ button:active {
   width: 160px;
   text-align: center;
   background-color: #26282e;
+}
+
+.toptable .toptable_fieldbig {
+  width: 320px;
+}
+
+.toptable .toptable_fieldwrong {
+  color: #a80d05;
+  background-color: #32262A;
+}
+
+.toptable input[type="text"] {
+  background: none;
+  border: 2px solid #ffffff;
+  padding: 5px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.toptable textarea {
+  background: none;
+  border: 2px solid #ffffff;
+  padding: 5px;
+  color: #ffffff;
+  text-align: left;
+  width: 100%;
+  resize: none;
+  height: 100%;
+}
+
+
+.toptable select {
+  background: none;
+  border: 2px solid #ffffff;
+  padding: 5px;
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
 }

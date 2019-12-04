@@ -57,12 +57,6 @@ if ($_POST['submenu'] == 'users') {
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Panel Administracyjny</title>
 
-  <!-- <style>
-        td {
-            text-align: center;
-        }
-    </style> -->
-
   <link rel="stylesheet" href="style.css">
 </head>
 

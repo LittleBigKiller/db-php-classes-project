@@ -473,3 +473,15 @@ button:disabled:active {
   text-align: center;
   width: 100%;
 }
+
+.toptable .usersimg {
+  max-width: 320px;
+}
+
+.toptable .usersimg img {
+  width: 100%;
+}
+
+.toptable .questionsimg img {
+  width: 100%;
+}

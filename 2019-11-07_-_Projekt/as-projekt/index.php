@@ -114,8 +114,15 @@ if (isset($_POST['logout'])) {
                     </tr>
                   <?php
                         }
-                      } else {
                         ?>
+                  <tr>
+                    <td colspan="3" class="usersimg">
+                      <img src="/as-projekt/usersgraph.php">
+                    </td>
+                  </tr>
+                <?php
+                    } else {
+                      ?>
                   <tr>
                     <td colspan="2">Brak Danych</td>
                   </tr>
@@ -149,8 +156,15 @@ if (isset($_POST['logout'])) {
                     </tr>
                   <?php
                         }
-                      } else {
                         ?>
+                  <tr>
+                    <td colspan="3" class="questionsimg">
+                      <img src="/as-projekt/questionsgraph.php">
+                    </td>
+                  </tr>
+                <?php
+                    } else {
+                      ?>
                   <tr>
                     <td colspan="2">Brak Danych</td>
                   </tr>

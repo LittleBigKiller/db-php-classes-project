@@ -61,8 +61,7 @@ if (isset($_POST['logout'])) {
         </form>
       <?php
       } else {
-        echo '
-                    <b>Nie jesteś zalogowany!</b>';
+        echo '<b>Nie jesteś zalogowany!</b>';
       }
       ?>
     </div>
@@ -239,8 +238,30 @@ if (isset($_POST['logout'])) {
                     </tr>
                   <?php
                         }
-                      } else {
                         ?>
+                  <tr>
+                    <th colspan="5">
+                      Ostatnie <?php
+                                      $rs0 = $conn->query('SELECT `uid` FROM `users` WHERE `username` = "' . $_COOKIE['username'] . '" ')
+                                        or die('Błąd pobierania danych');
+
+                                      $rec0 = $rs0->fetch_array();
+
+                                      $rs = $conn->query('SELECT (`ans_correct` / 10) * 100 AS "percentage" FROM `results` WHERE `uid` = ' . $rec0['uid'] . ' ORDER BY `timestamp` DESC LIMIT 10')
+                                        or die('Błąd pobierania danych');
+
+                                      echo ($rs->num_rows)
+                                      ?> podejść
+                    </th>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="personalimg">
+                      <img src="/as-projekt/personalgraph.php">
+                    </td>
+                  </tr>
+                <?php
+                    } else {
+                      ?>
                   <tr>
                     <td colspan="5">Brak Danych - Rozwiąż Test 10 Pytań</td>
                   </tr>

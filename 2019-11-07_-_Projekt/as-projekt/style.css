@@ -442,7 +442,7 @@ button:disabled:active {
 
 .toptable .toptable_fieldwrong {
   color: #a80d05;
-  background-color: #32262A;
+  background-color: #32262a;
 }
 
 .toptable input[type="text"] {
@@ -464,7 +464,6 @@ button:disabled:active {
   height: 100%;
 }
 
-
 .toptable select {
   background: none;
   border: 2px solid #ffffff;
@@ -483,5 +482,9 @@ button:disabled:active {
 }
 
 .toptable .questionsimg img {
+  width: 100%;
+}
+
+.toptable .personalimg img {
   width: 100%;
 }

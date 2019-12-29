@@ -40,7 +40,7 @@ if ($rs->num_rows > 0) {
     // $percentage = '100%';
 
     $kolorslupka = imagecolorallocate($rysunek, 255 - $percentage * 2, $percentage * 2, 0);
-    imagefilledrectangle($rysunek, 10, $counter * 50 + 10, 60 + $percentage * 4, $counter * 50 + 40, $kolorslupka);
+    imagefilledrectangle($rysunek, 10, $counter * 50 + 10, 20 + $percentage * 4, $counter * 50 + 40, $kolorslupka);
 
     $q_len = $percentage / 2 - 1;
 
